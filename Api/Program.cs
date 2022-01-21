@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.Net;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
@@ -46,8 +47,7 @@ TokenValidationParameters GetCognitoTokenValidationParams()
     {
         IssuerSigningKeyResolver = (s, securityToken, identifier, parameters) =>
         {
-            // get JsonWebKeySet from AWS
-            string json = new WebClient().DownloadString(jwtKeySetUrl);
+            string json = new HttpClient().GetStringAsync(jwtKeySetUrl).Result;
             return JsonConvert.DeserializeObject<JsonWebKeySet>(json).Keys;
         },
         ValidIssuer = cognitoIssuer,
