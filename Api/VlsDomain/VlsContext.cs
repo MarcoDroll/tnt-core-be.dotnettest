@@ -3,10 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.VlsDomain
 {
-    public class VlsContext : DbContext
+    public class VlsContext : DbContext, IVlsContext
     {
-        public VlsContext(DbContextOptions options) : base(options) {}
+        public VlsContext(DbContextOptions dbContextOptions) : base(dbContextOptions) { }
+        public VlsContext() { }
 
-        public DbSet<EpcisObjectEvent> EpcisObjectEvents { get; set; }
+        public DbSet<EpcisObjectEvent>? EpcisObjectEvents { get; set; }
     }
 }

@@ -41,7 +41,7 @@ namespace Api.Sqs
             string? secretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
             string? sqsUrl = "https://sqs.eu-west-1.amazonaws.com/640202800658/tnt-core-ingest-test";
 
-            var credentials = new Amazon.Runtime.BasicAWSCredentials(accessKey, secretKey);
+            Amazon.Runtime.BasicAWSCredentials? credentials = new Amazon.Runtime.BasicAWSCredentials(accessKey, secretKey);
             AmazonSQSClient amazonSQSClient = new(credentials, Amazon.RegionEndpoint.EUWest1);
 
             ReceiveMessageRequest receiveMessageRequest = new()
@@ -62,7 +62,7 @@ namespace Api.Sqs
                     epcisObjectEventHander.DoTheMagic(message.Body);
 
                     //Deleting message
-                    var deleteMessageRequest = new DeleteMessageRequest(sqsUrl, message.ReceiptHandle);
+                    DeleteMessageRequest? deleteMessageRequest = new DeleteMessageRequest(sqsUrl, message.ReceiptHandle);
                     await amazonSQSClient.DeleteMessageAsync(deleteMessageRequest, stoppingToken);
 
                     Console.WriteLine($"Message deleted");
